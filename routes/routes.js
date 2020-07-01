@@ -1,7 +1,8 @@
 var express = require('express')
 var router = express.Router()
 var User = require('../models/user')
-var Content = require('../models/listModel')
+var Content = require('../models/listModel');
+const { deleteOne } = require('../models/user');
 
 
 // Authentication Middleware
@@ -27,9 +28,17 @@ router.use(function(req,res,next){
     next();
   });
 // // Main Page
-router.get("/", loggedInOnly, (req, res) => {
-    console.log(req.user.username)
-    res.render("index", { username: req.user.username });
+router.get("/", loggedInOnly, (req, res, done) => {
+    Content.find((err, result)=>{
+      if(err) {
+        done(err)
+      }
+
+      console.log(req.user.username)
+        res.render("index", { username: req.user.username , data:result});
+    })
+
+      // res.send("jnlnljnlnl")
   });
 
 
